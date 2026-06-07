@@ -1,0 +1,248 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font-display: 'Lora', Georgia, serif;
+  --font-mono: 'DM Mono', 'Courier New', monospace;
+
+  --bg:           #F5F0E8;
+  --bg-card:      #FDFAF4;
+  --bg-hover:     #EDE8DF;
+  --border:       #DDD8CE;
+  --border-light: #EAE5DC;
+  --text-primary:   #1A1714;
+  --text-secondary: #6B6560;
+  --text-tertiary:  #A8A39C;
+  --accent:       #2C5F2E;
+  --accent-bg:    #E8F0E8;
+  --danger:       #8B2E2E;
+  --danger-bg:    #F5EAEA;
+  --shadow-sm:    0 1px 4px rgba(0,0,0,0.06);
+  --shadow-md:    0 8px 32px rgba(0,0,0,0.08);
+  --shadow-lift:  0 16px 48px rgba(0,0,0,0.12);
+}
+
+/* ── Landing page text protection ── */
+.landing-section {
+  position: relative;
+  z-index: 2;
+}
+
+[data-theme="dark"] {
+  --bg:           #0F0D0B;
+  --bg-card:      #17140F;
+  --bg-hover:     #1E1A14;
+  --border:       #2A2620;
+  --border-light: #221E18;
+  --text-primary:   #EDE8DF;
+  --text-secondary: #8A8580;
+  --text-tertiary:  #4A4640;
+  --accent:       #7BAE7F;
+  --accent-bg:    #1A2B1A;
+  --danger:       #C47A7A;
+  --danger-bg:    #2B1A1A;
+  --shadow-sm:    0 1px 4px rgba(0,0,0,0.4);
+  --shadow-md:    0 8px 32px rgba(0,0,0,0.5);
+  --shadow-lift:  0 16px 48px rgba(0,0,0,0.6);
+}
+
+html { font-size: 16px; }
+
+body {
+  font-family: var(--font-display);
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  transition: background 0.5s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+/* ── Animated background ── */
+.bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 1;
+  transition: background 0.5s ease;
+}
+
+/* Light mode orbs */
+.orb-1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, #C8B89A 0%, #B8A882 100%);
+  top: -150px; left: -200px;
+  animation: drift1 18s ease-in-out infinite alternate;
+}
+.orb-2 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, #A8C8A8 0%, #88B888 100%);
+  top: 30%; right: -180px;
+  animation: drift2 22s ease-in-out infinite alternate;
+}
+.orb-3 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, #B8B0D8 0%, #A0A0CC 100%);
+  bottom: -100px; left: -100px;
+  animation: drift3 16s ease-in-out infinite alternate;
+}
+
+
+
+/* Dark mode orbs */
+[data-theme="dark"] .orb-1 {
+  background: radial-gradient(circle, #3D2E1A 0%, #2A1E0A 100%);
+}
+[data-theme="dark"] .orb-2 {
+  background: radial-gradient(circle, #1A3A1A 0%, #0A2A0A 100%);
+}
+[data-theme="dark"] .orb-3 {
+  background: radial-gradient(circle, #1E1A38 0%, #0E0A28 100%);
+}
+
+/* Grain overlay */
+.bg-canvas::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+  opacity: 1;
+  pointer-events: none;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Keyframe animations ── */
+@keyframes drift1 {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(60px, 40px) scale(1.05); }
+  66%  { transform: translate(-30px, 80px) scale(0.97); }
+  100% { transform: translate(40px, -30px) scale(1.03); }
+}
+@keyframes drift2 {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(-50px, -60px) scale(1.08); }
+  66%  { transform: translate(30px, -20px) scale(0.95); }
+  100% { transform: translate(-20px, 50px) scale(1.04); }
+}
+@keyframes drift3 {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(40px, -40px) scale(1.1); }
+  100% { transform: translate(-40px, 20px) scale(0.95); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(139, 46, 46, 0.25);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 0 10px rgba(139, 46, 46, 0);
+  }
+}
+
+@keyframes waveBar {
+  0%, 100% { transform: scaleY(0.15); }
+  50%       { transform: scaleY(1); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(44, 95, 46, 0); }
+  50%       { box-shadow: 0 0 20px 2px rgba(44, 95, 46, 0.12); }
+}
+
+/* ── Entrance animations ── */
+.app-enter    { animation: fadeUp 0.6s ease both; }
+.header-enter { animation: fadeUp 0.5s ease 0.05s both; }
+.tabs-enter   { animation: fadeUp 0.5s ease 0.1s both; }
+.content-enter { animation: fadeUp 0.5s ease 0.15s both; }
+
+/* ── Card hover lift ── */
+.card-hover {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+  border-color: var(--border);
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── Textarea focus ── */
+textarea {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+textarea:focus {
+  outline: none;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(44, 95, 46, 0.08) !important;
+}
+[data-theme="dark"] textarea:focus {
+  box-shadow: 0 0 0 3px rgba(123, 174, 127, 0.1) !important;
+}
+
+/* ── Button base ── */
+button {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease !important;
+}
+button:active:not(:disabled) {
+  transform: scale(0.97) !important;
+}
+
+/* ── Theme toggle ── */
+.theme-btn:hover {
+  transform: rotate(180deg) !important;
+  transition: transform 0.4s ease !important;
+}
+
+/* ── Stat card ── */
+.stat-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ── Tag pills ── */
+.tag-pill {
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  cursor: default;
+}
+.tag-pill:hover {
+  background: var(--border) !important;
+  transform: scale(1.04);
+}
