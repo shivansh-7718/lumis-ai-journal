@@ -5,7 +5,7 @@ export async function generateWeeklySummary(entries) {
       `Date: ${new Date(e.date).toLocaleDateString()}, Emotion: ${e.primaryEmotion}, Energy: ${e.energyLevel}/10, Themes: ${e.themes.join(', ')}, Insight: "${e.keyInsight}"`
     ).join('\n');
   
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/weekly`, {
+    const response = await fetch('/api/weekly', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ summary })
