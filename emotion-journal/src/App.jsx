@@ -332,7 +332,8 @@ export default function App() {
                       ✦ share card
                     </button>
 
-                    <button onClick={() => deleteEntry(entry.id)} style={{
+                    <button onClick={() => {console.log('delete clicked', entry.id);
+  deleteEntry(entry.id);}} style={{
                       fontFamily: 'var(--font-mono)', fontSize: 10,
                       color: 'var(--text-tertiary)', background: 'none',
                       border: 'none', cursor: 'pointer', padding: 0,
@@ -343,6 +344,7 @@ export default function App() {
                     >
                       delete entry
                     </button>
+  
                   </div>
 
                 </div>
