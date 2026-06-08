@@ -21,8 +21,20 @@ export function useJournal(userId) {
       orderBy('date', 'desc')
     );
 
-    const unsub = onSnapshot(q, (snap) => {
-      setEntries(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    // const unsub = onSnapshot(q, (snap) => {
+    //   setEntries(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    // });
+
+      const unsub = onSnapshot(q, (snap) => {
+      const updatedEntries = snap.docs.map(d => ({
+        id: d.id,
+        ...d.data()
+      }));
+    
+      console.log("Snapshot updated:", updatedEntries.length);
+      console.log(updatedEntries);
+    
+      setEntries(updatedEntries);
     });
 
     return unsub;
@@ -44,8 +56,26 @@ export function useJournal(userId) {
     }
   }
 
+  // async function deleteEntry(id) {
+  //   await deleteDoc(doc(db, 'users', userId, 'entries', id));
+  // }
+
   async function deleteEntry(id) {
-    await deleteDoc(doc(db, 'users', userId, 'entries', id));
+    console.log("User ID:", userId);
+    console.log("Deleting document:", id);
+  
+    try {
+      await deleteDoc(doc(db, 'users', userId, 'entries', id));
+  
+      // Update UI immediately
+      setEntries(prev =>
+        prev.filter(entry => entry.id !== id)
+      );
+  
+      console.log("DELETE SUCCESS");
+    } catch (err) {
+      console.error("DELETE ERROR:", err);
+    }
   }
 
   return { entries, isAnalyzing, error, addEntry, deleteEntry };
