@@ -12,7 +12,6 @@ export function useJournal(userId) {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState(null);
 
-  // realtime listener — updates entries whenever Firestore changes
   useEffect(() => {
     if (!userId) { setEntries([]); return; }
 
@@ -21,20 +20,10 @@ export function useJournal(userId) {
       orderBy('date', 'desc')
     );
 
-    // const unsub = onSnapshot(q, (snap) => {
-    //   setEntries(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    // });
-
-      const unsub = onSnapshot(q, (snap) => {
-      const updatedEntries = snap.docs.map(d => ({
-        id: d.id,
-        ...d.data()
-      }));
-    
-      console.log("Snapshot updated:", updatedEntries.length);
-      console.log(updatedEntries);
-    
-      setEntries(updatedEntries);
+    const unsub = onSnapshot(q, (snap) => {
+      setEntries(snap.docs.map(d => ({ ...d.data(), id: d.id })));
+    }, (err) => {
+      console.error('Firestore error:', err.code, err.message);
     });
 
     return unsub;
@@ -56,25 +45,24 @@ export function useJournal(userId) {
     }
   }
 
-  // async function deleteEntry(id) {
-  //   await deleteDoc(doc(db, 'users', userId, 'entries', id));
-  // }
-
   async function deleteEntry(id) {
-    console.log("User ID:", userId);
-    console.log("Deleting document:", id);
-  
     try {
       await deleteDoc(doc(db, 'users', userId, 'entries', id));
-  
-      // Update UI immediately
-      setEntries(prev =>
-        prev.filter(entry => entry.id !== id)
-      );
-  
-      console.log("DELETE SUCCESS");
     } catch (err) {
-      console.error("DELETE ERROR:", err);
+      console.error('Delete error:', err.code, err.message);
+      setError('Could not delete entry: ' + err.message);
+    }
+    
+  }
+  async function deleteEntry(id) {
+    try {
+      console.log('attempting delete:', `users/${userId}/entries/${id}`);
+      const ref = doc(db, 'users', userId, 'entries', id);
+      console.log('ref path:', ref.path);
+      await deleteDoc(ref);
+      console.log('delete done');
+    } catch (err) {
+      console.error('Delete error:', err.code, err.message);
     }
   }
 
